@@ -190,10 +190,35 @@ input{
 <button onclick="register()">Register</button>
 
 <button onclick="login()">Login</button>
-<button onclick="googleLogin()">
-🔵 Continue with Google
+<button onclick="googleLogin()" style="background:#fff;color:#000;">
+  <img src="https://developers.google.com/identity/images/g-logo.png"
+       width="20"
+       style="vertical-align:middle;margin-right:8px;">
+  Continue with Google
 </button>
-</div>
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+function googleLogin() {
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+
+      db.ref("users/" + user.uid).once("value").then((snap) => {
+        if (!snap.exists()) {
+          db.ref("users/" + user.uid).set({
+            email: user.email,
+            name: user.displayName || "",
+            pending: 0,
+            withdrawBalance: 0,
+            adsWatched: 0
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+}
 
 <!-- APP -->
 
@@ -422,29 +447,7 @@ alert(error.message);
 });
 
 }
-const provider = new firebase.auth.GoogleAuthProvider();
 
-function googleLogin() {
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
-
-      db.ref("users/" + user.uid).once("value").then((snap) => {
-        if (!snap.exists()) {
-          db.ref("users/" + user.uid).set({
-            email: user.email,
-            name: user.displayName,
-            pending: 0,
-            withdrawBalance: 0,
-            adsWatched: 0
-          });
-        }
-      });
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-                        }
 /* LOGIN */
 
 function login(){
