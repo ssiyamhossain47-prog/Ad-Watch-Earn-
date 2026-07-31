@@ -27,13 +27,6 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.database();
 const auth = firebase.auth();
-
-</script>
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.database();
-const auth = firebase.auth();
-
 const provider = new firebase.auth.GoogleAuthProvider();
 
 function googleLogin() {
@@ -55,9 +48,10 @@ function googleLogin() {
     })
     .catch((error) => {
       alert(error.message);
-      console.log(error);
     });
 }
+</script>
+
 <style>
 
 body{
@@ -219,8 +213,8 @@ input{
 
 <button onclick="login()">Login</button>
 <button onclick="googleLogin()">
-  <img src="https://developers.google.com/identity/images/g-logo.png" width="18">
-  Continue with Google
+<img src="https://developers.google.com/identity/images/g-logo.png" width="20">
+Continue with Google
 </button>
 <!-- APP -->
 
