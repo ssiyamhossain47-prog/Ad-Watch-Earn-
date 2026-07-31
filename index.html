@@ -29,7 +29,35 @@ const db = firebase.database();
 const auth = firebase.auth();
 
 </script>
+firebase.initializeApp(firebaseConfig);
 
+const db = firebase.database();
+const auth = firebase.auth();
+
+const provider = new firebase.auth.GoogleAuthProvider();
+
+function googleLogin() {
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+
+      db.ref("users/" + user.uid).once("value").then((snap) => {
+        if (!snap.exists()) {
+          db.ref("users/" + user.uid).set({
+            email: user.email,
+            name: user.displayName || "",
+            pending: 0,
+            withdrawBalance: 0,
+            adsWatched: 0
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      alert(error.message);
+      console.log(error);
+    });
+}
 <style>
 
 body{
@@ -190,36 +218,10 @@ input{
 <button onclick="register()">Register</button>
 
 <button onclick="login()">Login</button>
-<button onclick="googleLogin()" style="background:#fff;color:#000;">
-  <img src="https://developers.google.com/identity/images/g-logo.png"
-       width="20"
-       style="vertical-align:middle;margin-right:8px;">
+<button onclick="googleLogin()">
+  <img src="https://developers.google.com/identity/images/g-logo.png" width="18">
   Continue with Google
 </button>
-  const provider = new firebase.auth.GoogleAuthProvider();
-
-function googleLogin() {
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
-
-      db.ref("users/" + user.uid).once("value").then((snap) => {
-        if (!snap.exists()) {
-          db.ref("users/" + user.uid).set({
-            email: user.email,
-            name: user.displayName || "",
-            pending: 0,
-            withdrawBalance: 0,
-            adsWatched: 0
-          });
-        }
-      });
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-}
-
 <!-- APP -->
 
 <div id="app" style="display:none;">
